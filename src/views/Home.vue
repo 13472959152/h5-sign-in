@@ -1,18 +1,55 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <van-field v-model="id" placeholder="请输入id" />
+  <van-button @click="handleClick" type="primary">主要按钮</van-button>
+
+  <hr />
+  <div v-for="(item, index) in getChecked()" :key="index">
+    <p>姓名:{{ item.name }}</p>
+    <p>id:{{ item.id }}</p>
   </div>
 </template>
 
-<script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+<script setup>
+import { reactive, ref } from "vue";
+import { showNotify } from "vant";
 
-export default {
-  name: 'Home',
-  components: {
-    HelloWorld
+// 输入的id
+let id = ref("");
+// 愿数据
+let data = reactive([
+  {
+    name: "张三",
+    id: 1,
+    active: false,
+  },
+  {
+    name: "李四",
+    id: 2,
+    active: false,
+  },
+  {
+    name: "王五",
+    id: 3,
+    active: false,
+  },
+]);
+
+let isSigninArray = ref([]);
+
+let handleClick = () => {
+  let { value } = id;
+  let result = data.filter((item) => item.id == value);
+  if (result.length) {
+    result[0].active = true;
+  } else {
+    showNotify({ message: "不存在!" });
   }
-}
+  id.value = "";
+};
+
+let getChecked = () => {
+  return data.filter((item) => item.active);
+};
 </script>
+
+<style lang="scss" scoped></style>
